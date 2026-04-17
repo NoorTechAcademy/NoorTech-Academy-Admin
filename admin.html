@@ -150,20 +150,26 @@
     }
 
     .logout-btn{
-      border:none;
-      cursor:pointer;
-      padding:14px 16px;
-      border-radius:14px;
-      font-weight:bold;
-      background:#dc2626;
-      color:white;
-      transition:0.3s;
-    }
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
 
-    .logout-btn:hover{
-      background:#b91c1c;
-      transform:translateY(-2px);
-    }
+  background:linear-gradient(135deg, #dc2626, #b91c1c);
+  color:white;
+
+  box-shadow:0 8px 20px rgba(220,38,38,0.3);
+  transition:0.3s;
+}
+
+.logout-btn:hover{
+  transform:translateY(-2px) scale(1.02);
+  background:linear-gradient(135deg, #b91c1c, #7f1d1d);
+  box-shadow:0 12px 25px rgba(220,38,38,0.5);
+}
 
     .content{
       padding:30px;
