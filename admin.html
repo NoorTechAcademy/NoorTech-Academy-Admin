@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - NoorTech Academy</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100vh;
+      background:url("bg2.jpg") no-repeat center center/cover;
+      position:relative;
+      overflow-x:hidden;
+      color:#1f2937;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,50,30,0.55));
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,215,120,0.14), transparent 22%),
+        radial-gradient(circle at 85% 30%, rgba(255,215,120,0.08), transparent 18%);
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    button{
+      font-family:inherit;
+    }
+
+    .page{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:270px 1fr;
+    }
+
+    .sidebar{
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(12px);
+      border-right:1px solid rgba(255,255,255,0.18);
+      padding:26px 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      height:100vh;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:30px;
+    }
+
+    .brand-icon{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      background:#047857;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:bold;
+      box-shadow:0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    .brand-text h1{
+      color:white;
+      font-size:22px;
+      line-height:1.1;
+    }
+
+    .brand-text p{
+      color:#d1fae5;
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .menu a{
+      color:white;
+      font-weight:600;
+      padding:14px 16px;
+      border-radius:14px;
+      transition:0.3s;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .menu a:hover,
+    .menu a.active{
+      background:rgba(255,255,255,0.16);
+      color:#facc15;
+      transform:translateX(4px);
+    }
+
+    .menu-icon{
+      width:22px;
+      text-align:center;
+      font-size:17px;
+    }
+
+    .sidebar-footer{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .mini-note{
+      color:#e5e7eb;
+      font-size:13px;
+      line-height:1.7;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .logout-btn{
+      border:none;
+      cursor:pointer;
+      padding:14px 16px;
+      border-radius:14px;
+      font-weight:bold;
+      background:#dc2626;
+      color:white;
+      transition:0.3s;
+    }
+
+    .logout-btn:hover{
+      background:#b91c1c;
+      transform:translateY(-2px);
+    }
+
+    .content{
+      padding:30px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:24px;
+    }
+
+    .welcome-box{
+      background:rgba(255,255,255,0.14);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:24px;
+      padding:24px;
+      color:white;
+      box-shadow:0 12px 30px rgba(0,0,0,0.10);
+      flex:1;
+      min-width:280px;
+    }
+
+    .welcome-box p{
+      color:#d1fae5;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    .welcome-box h2{
+      margin-top:10px;
+      font-size:34px;
+      line-height:1.2;
+    }
+
+    .welcome-box span{
+      color:#facc15;
+    }
+
+    .quick-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .quick-btn{
+      padding:12px 18px;
+      border-radius:14px;
+      font-weight:bold;
+      border:none;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .quick-btn.primary{
+      background:#047857;
+      color:white;
+    }
+
+    .quick-btn.primary:hover{
+      background:#065f46;
+    }
+
+    .quick-btn.secondary{
+      background:rgba(255,255,255,0.14);
+      color:white;
+      border:1px solid rgba(255,255,255,0.18);
+      backdrop-filter:blur(8px);
+    }
+
+    .quick-btn.secondary:hover{
+      background:rgba(255,255,255,0.22);
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .stat-card{
+      background:rgba(255,255,255,0.92);
+      border:1px solid rgba(255,255,255,0.35);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 10px 24px rgba(0,0,0,0.08);
+      backdrop-filter:blur(8px);
+      transition:0.3s;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-4px);
+    }
+
+    .stat-card h3{
+      color:#047857;
+      font-size:30px;
+      margin-bottom:8px;
+    }
+
+    .stat-card p{
+      color:#6b7280;
+      font-size:14px;
+    }
+
+    .admin-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:24px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.93);
+      border:1px solid rgba(255,255,255,0.35);
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .card-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .card-title h3{
+      color:#064e3b;
+      font-size:24px;
+    }
+
+    .card-title span{
+      color:#6b7280;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1.2fr auto auto;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .toolbar-box{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:12px 14px;
+    }
+
+    .toolbar-box input,
+    .toolbar-box select{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      font-size:14px;
+      color:#1f2937;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:980px;
+    }
+
+    th, td{
+      padding:14px 12px;
+      text-align:left;
+      border-bottom:1px solid #e5e7eb;
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    th{
+      color:#065f46;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      background:#f9fafb;
+    }
+
+    td{
+      color:#4b5563;
+    }
+
+    tr:hover td{
+      background:#fcfcfc;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    .badge-green{
+      background:#ecfdf5;
+      color:#065f46;
+      border:1px solid #a7f3d0;
+    }
+
+    .badge-gold{
+      background:#fef3c7;
+      color:#b45309;
+      border:1px solid #fde68a;
+    }
+
+    .badge-red{
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #fecaca;
+    }
+
+    .badge-blue{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+    }
+
+    .action-btn{
+      border:none;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:bold;
+      margin-right:6px;
+      margin-bottom:4px;
+      transition:0.3s;
+    }
+
+    .view-btn{
+      background:#ecfdf5;
+      color:#065f46;
+      border:1px solid #a7f3d0;
+    }
+
+    .edit-btn{
+      background:#fef3c7;
+      color:#b45309;
+      border:1px solid #fde68a;
+    }
+
+    .delete-btn{
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #fecaca;
+    }
+
+    .action-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .empty-state{
+      display:none;
+      margin-top:12px;
+      padding:16px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      color:#6b7280;
+      font-size:14px;
+      text-align:center;
+    }
+
+    .info-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .info-item{
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .info-item strong{
+      display:block;
+      color:#065f46;
+      margin-bottom:6px;
+    }
+
+    .info-item p{
+      color:#6b7280;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .teacher-card{
+      padding:16px;
+      border-radius:18px;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      margin-bottom:14px;
+    }
+
+    .teacher-card:last-child{
+      margin-bottom:0;
+    }
+
+    .teacher-card h4{
+      color:#065f46;
+      margin-bottom:6px;
+      font-size:18px;
+    }
+
+    .teacher-card p{
+      color:#4b5563;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .horizontal-sections{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:24px;
+    }
+
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.65);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:0.35s;
+      z-index:5000;
+      padding:20px;
+    }
+
+    .popup.active{
+      opacity:1;
+      pointer-events:all;
+    }
+
+    .popup-content{
+      width:100%;
+      max-width:680px;
+      background:white;
+      border-radius:24px;
+      padding:28px 24px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.18);
+      max-height:90vh;
+      overflow:auto;
+    }
+
+    .popup-small{
+      max-width:520px;
+    }
+
+    .popup-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .popup-head h3{
+      color:#047857;
+      font-size:26px;
+    }
+
+    .close-btn{
+      border:none;
+      background:#f3f4f6;
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .popup-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .popup-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .popup-group.full{
+      grid-column:1 / -1;
+    }
+
+    .popup-group label{
+      color:#065f46;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .popup-group input,
+    .popup-group select{
+      width:100%;
+      padding:14px 16px;
+      border:1px solid #a7f3d0;
+      border-radius:14px;
+      font-size:15px;
+      outline:none;
+      background:white;
+    }
+
+    .popup-group input:focus,
+    .popup-group select:focus{
+      border-color:#10b981;
+      box-shadow:0 0 0 3px rgba(16,185,129,0.15);
+    }
+
+    .popup-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    .popup-btn{
+      padding:12px 18px;
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .save-btn{
+      background:#047857;
+      color:white;
+    }
+
+    .save-btn:hover{
+      background:#065f46;
+    }
+
+    .cancel-btn{
+      background:#f3f4f6;
+      color:#1f2937;
+    }
+
+    .cancel-btn:hover{
+      background:#e5e7eb;
+    }
+
+    .profile-box{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+    }
+
+    .profile-item{
+      padding:14px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .profile-item strong{
+      display:block;
+      color:#065f46;
+      margin-bottom:6px;
+      font-size:13px;
+      text-transform:uppercase;
+    }
+
+    .profile-item p{
+      color:#4b5563;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(30px);
+      transition:opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.active{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width: 1200px){
+      .stats-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .toolbar{
+        grid-template-columns:1fr;
+      }
+
+      .horizontal-sections{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 900px){
+      .page{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:relative;
+        height:auto;
+      }
+    }
+
+    @media (max-width: 650px){
+      .content{
+        padding:18px;
+      }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .topbar{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .popup-grid,
+      .profile-box{
+        grid-template-columns:1fr;
+      }
+
+      .popup-group.full{
+        grid-column:auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-icon">A</div>
+          <div class="brand-text">
+            <h1>NoorTech Admin</h1>
+            <p>Academy Management Panel</p>
+          </div>
+        </div>
+
+        <div class="menu">
+          <a href="#" class="active" data-section="dashboardSection"><span class="menu-icon">📊</span> Dashboard</a>
+          <a href="#" data-section="studentsSection"><span class="menu-icon">👨‍🎓</span> Students</a>
+          <a href="#" data-section="teachersSection"><span class="menu-icon">👨‍🏫</span> Teachers</a>
+          <a href="#" data-section="plansSection"><span class="menu-icon">💳</span> Plans</a>
+          <a href="#" data-section="meetingsSection"><span class="menu-icon">📅</span> Meetings</a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="mini-note">
+          Manage students, teachers, subscriptions, and academy activity from one place.
+        </div>
+        <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar reveal">
+        <div class="welcome-box">
+          <p>Admin Panel</p>
+          <h2>Welcome back, <span>Mohamed</span> 👋</h2>
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-btn primary" id="openAddStudentBtn">Add Student</button>
+          <button class="quick-btn secondary" id="openAddTeacherBtn">Add Teacher</button>
+        </div>
+      </div>
+
+      <div class="stats-grid reveal">
+        <div class="stat-card">
+          <h3 id="totalStudentsStat">0</h3>
+          <p>Total Students</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalTeachersStat">0</h3>
+          <p>Total Teachers</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="activePlansStat">0</h3>
+          <p>Active Plans</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="pendingRequestsStat">0</h3>
+          <p>Pending Requests</p>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+
+        <div class="card reveal" id="dashboardSection">
+          <div class="card-title">
+            <h3>Students Information</h3>
+            <span>Clients / Students list</span>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-box">
+              <input type="text" id="studentSearch" placeholder="Search by name, email, phone, or country...">
+            </div>
+            <div class="toolbar-box">
+              <select id="planFilter">
+                <option value="all">All Plans</option>
+                <option value="Basic">Basic</option>
+                <option value="Standard">Standard</option>
+                <option value="Premium">Premium</option>
+                <option value="VIP">VIP</option>
+              </select>
+            </div>
+            <div class="toolbar-box">
+              <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>Plan</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="studentsEmptyState">
+            No student found with this search or filter.
+          </div>
+        </div>
+
+        <div class="card reveal" id="teachersSection">
+          <div class="card-title">
+            <h3>Teachers Information</h3>
+            <span>Academy professors</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Teacher</th>
+                  <th>Speciality</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>Schedule</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card reveal" id="meetingsSection">
+          <div class="card-title">
+            <h3>Upcoming Meetings</h3>
+            <span>This week</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Meeting</th>
+                  <th>Teacher</th>
+                  <th>Day</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Reading Practice</td>
+                  <td>Ustadh Ahmed</td>
+                  <td>Monday</td>
+                  <td>18:00</td>
+                  <td><span class="badge badge-green">Scheduled</span></td>
+                </tr>
+                <tr>
+                  <td>Tajwid Session</td>
+                  <td>Ustadha Maryam</td>
+                  <td>Wednesday</td>
+                  <td>19:00</td>
+                  <td><span class="badge badge-green">Scheduled</span></td>
+                </tr>
+                <tr>
+                  <td>Children Class</td>
+                  <td>Ustadha Hafsa</td>
+                  <td>Thursday</td>
+                  <td>18:30</td>
+                  <td><span class="badge badge-gold">Limited</span></td>
+                </tr>
+                <tr>
+                  <td>Advanced Tajwid</td>
+                  <td>Ustadh Ismail</td>
+                  <td>Friday</td>
+                  <td>20:00</td>
+                  <td><span class="badge badge-green">Scheduled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-title">
+            <h3>Recent Registrations</h3>
+            <span>Latest</span>
+          </div>
+          <div class="info-list" id="recentRegistrationsList"></div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-title">
+            <h3>Teachers Overview</h3>
+            <span>Quick list</span>
+          </div>
+          <div id="teacherOverviewList"></div>
+        </div>
+
+        <div class="card reveal" id="plansSection">
+          <div class="card-title">
+            <h3>Plans Overview</h3>
+            <span>Subscriptions</span>
+          </div>
+          <div class="info-list" id="plansOverviewList"></div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-title">
+            <h3>Recent Activity</h3>
+            <span>System updates</span>
+          </div>
+
+          <div class="info-list">
+            <div class="info-item">
+              <strong>New Student Added</strong>
+              <p>Safae Zerhouni was added to the Standard Plan.</p>
+            </div>
+            <div class="info-item">
+              <strong>Teacher Added</strong>
+              <p>Ustadha Sara joined the women Quran sessions team.</p>
+            </div>
+            <div class="info-item">
+              <strong>Plan Updated</strong>
+              <p>Mohamed Koubaa changed from Standard to Premium Plan.</p>
+            </div>
+            <div class="info-item">
+              <strong>Status Changed</strong>
+              <p>Youssef Amrani payment status is now pending.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="horizontal-sections">
+          <div class="card reveal">
+            <div class="card-title">
+              <h3>Payments Overview</h3>
+              <span>Quarterly payments</span>
+            </div>
+
+            <div class="info-list">
+              <div class="info-item">
+                <strong>Total Revenue</strong>
+                <p>7,820€ collected this quarter.</p>
+              </div>
+              <div class="info-item">
+                <strong>Pending Payments</strong>
+                <p>9 students still have pending subscriptions.</p>
+              </div>
+              <div class="info-item">
+                <strong>Most Selected Plan</strong>
+                <p>Premium Plan is the most popular this month.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="card-title">
+              <h3>Messages & Requests</h3>
+              <span>Latest contact</span>
+            </div>
+
+            <div class="info-list">
+              <div class="info-item">
+                <strong>Parent Request</strong>
+                <p>A parent from Belgium asked for a beginner class for children.</p>
+              </div>
+              <div class="info-item">
+                <strong>Teacher Request</strong>
+                <p>Ustadha Maryam requested a schedule update for Wednesday.</p>
+              </div>
+              <div class="info-item">
+                <strong>Student Help</strong>
+                <p>A student from Germany asked for access to Tajwid lessons.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="card-title">
+              <h3>Countries Overview</h3>
+              <span>Europe students</span>
+            </div>
+
+            <div class="info-list">
+              <div class="info-item">
+                <strong>France</strong>
+                <p>26 students registered</p>
+              </div>
+              <div class="info-item">
+                <strong>Belgium</strong>
+                <p>18 students registered</p>
+              </div>
+              <div class="info-item">
+                <strong>Spain</strong>
+                <p>14 students registered</p>
+              </div>
+              <div class="info-item">
+                <strong>Germany</strong>
+                <p>21 students registered</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- VIEW STUDENT -->
+  <div class="popup" id="viewStudentPopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>View Student</h3>
+        <button class="close-btn" onclick="closePopup('viewStudentPopup')">✕</button>
+      </div>
+      <div class="profile-box" id="viewStudentDetails"></div>
+      <div class="popup-actions">
+        <button class="popup-btn cancel-btn" onclick="closePopup('viewStudentPopup')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT STUDENT -->
+  <div class="popup" id="editStudentPopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>Edit Student</h3>
+        <button class="close-btn" onclick="closePopup('editStudentPopup')">✕</button>
+      </div>
+
+      <form id="editStudentForm">
+        <div class="popup-grid">
+          <div class="popup-group">
+            <label for="editStudentName">Full Name</label>
+            <input type="text" id="editStudentName">
+          </div>
+          <div class="popup-group">
+            <label for="editStudentEmail">Email</label>
+            <input type="email" id="editStudentEmail">
+          </div>
+          <div class="popup-group">
+            <label for="editStudentPhone">Phone</label>
+            <input type="text" id="editStudentPhone">
+          </div>
+          <div class="popup-group">
+            <label for="editStudentCountry">Country</label>
+            <input type="text" id="editStudentCountry">
+          </div>
+          <div class="popup-group">
+            <label for="editStudentPlan">Plan</label>
+            <select id="editStudentPlan">
+              <option value="Basic">Basic</option>
+              <option value="Standard">Standard</option>
+              <option value="Premium">Premium</option>
+              <option value="VIP">VIP</option>
+            </select>
+          </div>
+          <div class="popup-group">
+            <label for="editStudentPrice">Price</label>
+            <input type="text" id="editStudentPrice">
+          </div>
+          <div class="popup-group full">
+            <label for="editStudentStatus">Status</label>
+            <select id="editStudentStatus">
+              <option value="Active">Active</option>
+              <option value="Pending">Pending</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="popup-actions">
+          <button type="submit" class="popup-btn save-btn">Save Changes</button>
+          <button type="button" class="popup-btn cancel-btn" onclick="closePopup('editStudentPopup')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD STUDENT -->
+  <div class="popup" id="addStudentPopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>Add Student</h3>
+        <button class="close-btn" onclick="closePopup('addStudentPopup')">✕</button>
+      </div>
+
+      <form id="addStudentForm">
+        <div class="popup-grid">
+          <div class="popup-group">
+            <label for="addStudentName">Full Name</label>
+            <input type="text" id="addStudentName" required>
+          </div>
+          <div class="popup-group">
+            <label for="addStudentEmail">Email</label>
+            <input type="email" id="addStudentEmail" required>
+          </div>
+          <div class="popup-group">
+            <label for="addStudentPhone">Phone</label>
+            <input type="text" id="addStudentPhone" required>
+          </div>
+          <div class="popup-group">
+            <label for="addStudentCountry">Country</label>
+            <select id="addStudentCountry" required>
+              <option value="">Select country</option>
+              <option>France</option>
+              <option>Belgium</option>
+              <option>Spain</option>
+              <option>Germany</option>
+              <option>Netherlands</option>
+              <option>Italy</option>
+              <option>Portugal</option>
+              <option>Sweden</option>
+              <option>Norway</option>
+              <option>Switzerland</option>
+            </select>
+          </div>
+          <div class="popup-group">
+            <label for="addStudentPlan">Plan</label>
+            <select id="addStudentPlan" required>
+              <option value="">Select plan</option>
+              <option value="Basic">Basic</option>
+              <option value="Standard">Standard</option>
+              <option value="Premium">Premium</option>
+              <option value="VIP">VIP</option>
+            </select>
+          </div>
+          <div class="popup-group">
+            <label for="addStudentStatus">Status</label>
+            <select id="addStudentStatus" required>
+              <option value="">Select status</option>
+              <option value="Active">Active</option>
+              <option value="Pending">Pending</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="popup-actions">
+          <button type="submit" class="popup-btn save-btn">Add Student</button>
+          <button type="button" class="popup-btn cancel-btn" onclick="closePopup('addStudentPopup')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD TEACHER -->
+  <div class="popup" id="addTeacherPopup">
+    <div class="popup-content popup-small">
+      <div class="popup-head">
+        <h3>Add Teacher</h3>
+        <button class="close-btn" onclick="closePopup('addTeacherPopup')">✕</button>
+      </div>
+
+      <form id="addTeacherForm">
+        <div class="popup-grid">
+          <div class="popup-group full">
+            <label for="addTeacherName">Teacher Name</label>
+            <input type="text" id="addTeacherName" required>
+          </div>
+          <div class="popup-group">
+            <label for="addTeacherSpeciality">Speciality</label>
+            <input type="text" id="addTeacherSpeciality" required>
+          </div>
+          <div class="popup-group">
+            <label for="addTeacherEmail">Email</label>
+            <input type="email" id="addTeacherEmail" required>
+          </div>
+          <div class="popup-group">
+            <label for="addTeacherPhone">Phone</label>
+            <input type="text" id="addTeacherPhone" required>
+          </div>
+          <div class="popup-group">
+            <label for="addTeacherCountry">Country</label>
+            <select id="addTeacherCountry" required>
+              <option value="">Select country</option>
+              <option>France</option>
+              <option>Belgium</option>
+              <option>Spain</option>
+              <option>Germany</option>
+              <option>Netherlands</option>
+              <option>Italy</option>
+              <option>Portugal</option>
+              <option>Sweden</option>
+              <option>Norway</option>
+              <option>Switzerland</option>
+            </select>
+          </div>
+          <div class="popup-group">
+            <label for="addTeacherSchedule">Schedule</label>
+            <input type="text" id="addTeacherSchedule" placeholder="Monday - 18:00" required>
+          </div>
+          <div class="popup-group full">
+            <label for="addTeacherStatus">Status</label>
+            <select id="addTeacherStatus" required>
+              <option value="Available">Available</option>
+              <option value="Busy">Busy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="popup-actions">
+          <button type="submit" class="popup-btn save-btn">Add Teacher</button>
+          <button type="button" class="popup-btn cancel-btn" onclick="closePopup('addTeacherPopup')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const students = [
+      { id: 1, name: "Mohamed Koubaa", email: "mohamed@example.com", phone: "+33 6 12 34 56 78", country: "France", plan: "Premium", price: "100€ / trimestre", status: "Active" },
+      { id: 2, name: "Safae Zerhouni", email: "safae@example.com", phone: "+32 6 98 76 54 32", country: "Belgium", plan: "Standard", price: "70€ / trimestre", status: "Active" },
+      { id: 3, name: "Youssef Amrani", email: "youssef@example.com", phone: "+34 6 22 44 66 88", country: "Spain", plan: "Basic", price: "40€ / trimestre", status: "Pending" },
+      { id: 4, name: "Maryam Naciri", email: "maryam@example.com", phone: "+49 155 11 22 33", country: "Germany", plan: "VIP", price: "150€ / trimestre", status: "Active" },
+      { id: 5, name: "Omar Lahlou", email: "omar@example.com", phone: "+31 6 44 77 88 99", country: "Netherlands", plan: "Premium", price: "100€ / trimestre", status: "Inactive" },
+      { id: 6, name: "Sara El Idrissi", email: "sarae@example.com", phone: "+39 333 22 11 44", country: "Italy", plan: "Standard", price: "70€ / trimestre", status: "Active" },
+      { id: 7, name: "Adam Benali", email: "adam@example.com", phone: "+351 912 55 66 77", country: "Portugal", plan: "Basic", price: "40€ / trimestre", status: "Pending" },
+      { id: 8, name: "Hafsa Toumi", email: "hafsa@example.com", phone: "+41 79 456 78 90", country: "Switzerland", plan: "VIP", price: "150€ / trimestre", status: "Active" }
+    ];
+
+    const teachers = [
+      { id: 1, name: "Ustadh Ahmed", speciality: "Reading Practice", email: "ahmed@noortech.com", phone: "+33 6 10 20 30 40", country: "France", schedule: "Monday - 18:00", status: "Available" },
+      { id: 2, name: "Ustadha Maryam", speciality: "Tajwid", email: "maryam@noortech.com", phone: "+32 6 55 66 77 88", country: "Belgium", schedule: "Wednesday - 19:00", status: "Available" },
+      { id: 3, name: "Ustadh Yassine", speciality: "Memorization", email: "yassine@noortech.com", phone: "+34 6 99 88 77 66", country: "Spain", schedule: "Saturday - 17:00", status: "Busy" },
+      { id: 4, name: "Ustadh Bilal", speciality: "Quran Basics", email: "bilal@noortech.com", phone: "+49 155 22 33 44", country: "Germany", schedule: "Tuesday - 17:30", status: "Available" },
+      { id: 5, name: "Ustadha Hafsa", speciality: "Children Quran Classes", email: "hafsa@noortech.com", phone: "+31 6 88 77 66 55", country: "Netherlands", schedule: "Thursday - 18:30", status: "Available" },
+      { id: 6, name: "Ustadh Ismail", speciality: "Advanced Tajwid", email: "ismail@noortech.com", phone: "+39 333 44 55 66", country: "Italy", schedule: "Friday - 20:00", status: "Busy" },
+      { id: 7, name: "Ustadha Sara", speciality: "Women Quran Sessions", email: "sara@noortech.com", phone: "+351 912 33 44 55", country: "Portugal", schedule: "Sunday - 16:00", status: "Available" }
+    ];
+
+    const studentsTableBody = document.getElementById("studentsTableBody");
+    const teachersTableBody = document.getElementById("teachersTableBody");
+    const recentRegistrationsList = document.getElementById("recentRegistrationsList");
+    const teacherOverviewList = document.getElementById("teacherOverviewList");
+    const plansOverviewList = document.getElementById("plansOverviewList");
+    const studentsEmptyState = document.getElementById("studentsEmptyState");
+
+    const studentSearch = document.getElementById("studentSearch");
+    const planFilter = document.getElementById("planFilter");
+    const statusFilter = document.getElementById("statusFilter");
+
+    const totalStudentsStat = document.getElementById("totalStudentsStat");
+    const totalTeachersStat = document.getElementById("totalTeachersStat");
+    const activePlansStat = document.getElementById("activePlansStat");
+    const pendingRequestsStat = document.getElementById("pendingRequestsStat");
+
+    let editingStudentId = null;
+
+    function getStatusBadge(status) {
+      if (status === "Active" || status === "Available" || status === "Scheduled") return "badge badge-green";
+      if (status === "Pending" || status === "Busy" || status === "Limited") return "badge badge-gold";
+      return "badge badge-red";
+    }
+
+    function getPlanBadge(plan) {
+      if (plan === "VIP") return "badge badge-blue";
+      if (plan === "Premium" || plan === "Standard") return "badge badge-gold";
+      return "badge badge-green";
+    }
+
+    function renderStudents() {
+      const searchValue = studentSearch.value.toLowerCase().trim();
+      const selectedPlan = planFilter.value;
+      const selectedStatus = statusFilter.value;
+
+      studentsTableBody.innerHTML = "";
+      let visibleCount = 0;
+
+      students.forEach((student) => {
+        const matchesSearch =
+          student.name.toLowerCase().includes(searchValue) ||
+          student.email.toLowerCase().includes(searchValue) ||
+          student.phone.toLowerCase().includes(searchValue) ||
+          student.country.toLowerCase().includes(searchValue);
+
+        const matchesPlan = selectedPlan === "all" || student.plan === selectedPlan;
+        const matchesStatus = selectedStatus === "all" || student.status === selectedStatus;
+
+        if (matchesSearch && matchesPlan && matchesStatus) {
+          visibleCount++;
+          studentsTableBody.innerHTML += `
+            <tr>
+              <td>${student.name}</td>
+              <td>${student.email}</td>
+              <td>${student.phone}</td>
+              <td>${student.country}</td>
+              <td><span class="${getPlanBadge(student.plan)}">${student.plan}</span></td>
+              <td>${student.price}</td>
+              <td><span class="${getStatusBadge(student.status)}">${student.status}</span></td>
+              <td>
+                <button class="action-btn view-btn" onclick="openViewStudent(${student.id})">View</button>
+                <button class="action-btn edit-btn" onclick="openEditStudent(${student.id})">Edit</button>
+                <button class="action-btn delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
+              </td>
+            </tr>
+          `;
+        }
+      });
+
+      studentsEmptyState.style.display = visibleCount === 0 ? "block" : "none";
+    }
+
+    function renderTeachers() {
+      teachersTableBody.innerHTML = "";
+      teachers.forEach((teacher) => {
+        teachersTableBody.innerHTML += `
+          <tr>
+            <td>${teacher.name}</td>
+            <td>${teacher.speciality}</td>
+            <td>${teacher.email}</td>
+            <td>${teacher.phone}</td>
+            <td>${teacher.country}</td>
+            <td>${teacher.schedule}</td>
+            <td><span class="${getStatusBadge(teacher.status)}">${teacher.status}</span></td>
+            <td>
+              <button class="action-btn delete-btn" onclick="deleteTeacher(${teacher.id})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderRecentRegistrations() {
+      recentRegistrationsList.innerHTML = "";
+      const latest = [...students].slice(-4).reverse();
+
+      latest.forEach((student) => {
+        recentRegistrationsList.innerHTML += `
+          <div class="info-item">
+            <strong>New Student Registration</strong>
+            <p>${student.name} registered for the ${student.plan} Plan in ${student.country}.</p>
+          </div>
+        `;
+      });
+    }
+
+    function renderTeacherOverview() {
+      teacherOverviewList.innerHTML = "";
+      teachers.forEach((teacher) => {
+        teacherOverviewList.innerHTML += `
+          <div class="teacher-card">
+            <h4>${teacher.name}</h4>
+            <p>Speciality: ${teacher.speciality}</p>
+            <p>Country: ${teacher.country}</p>
+            <p>Status: ${teacher.status}</p>
+          </div>
+        `;
+      });
+    }
+
+    function renderPlansOverview() {
+      const counts = { Basic: 0, Standard: 0, Premium: 0, VIP: 0 };
+      students.forEach((student) => {
+        if (counts[student.plan] !== undefined) counts[student.plan]++;
+      });
+
+      plansOverviewList.innerHTML = `
+        <div class="info-item"><strong>Basic Plan</strong><p>${counts.Basic} students</p></div>
+        <div class="info-item"><strong>Standard Plan</strong><p>${counts.Standard} students</p></div>
+        <div class="info-item"><strong>Premium Plan</strong><p>${counts.Premium} students</p></div>
+        <div class="info-item"><strong>VIP Plan</strong><p>${counts.VIP} students</p></div>
+      `;
+    }
+
+    function renderStats() {
+      totalStudentsStat.textContent = students.length;
+      totalTeachersStat.textContent = teachers.length;
+      activePlansStat.textContent = students.filter((s) => s.status === "Active").length;
+      pendingRequestsStat.textContent = students.filter((s) => s.status === "Pending").length;
+    }
+
+    function openPopup(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function closePopup(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    function openViewStudent(id) {
+      const student = students.find((s) => s.id === id);
+      if (!student) return;
+
+      const box = document.getElementById("viewStudentDetails");
+      box.innerHTML = `
+        <div class="profile-item"><strong>Full Name</strong><p>${student.name}</p></div>
+        <div class="profile-item"><strong>Email</strong><p>${student.email}</p></div>
+        <div class="profile-item"><strong>Phone</strong><p>${student.phone}</p></div>
+        <div class="profile-item"><strong>Country</strong><p>${student.country}</p></div>
+        <div class="profile-item"><strong>Plan</strong><p>${student.plan}</p></div>
+        <div class="profile-item"><strong>Price</strong><p>${student.price}</p></div>
+        <div class="profile-item"><strong>Status</strong><p>${student.status}</p></div>
+        <div class="profile-item"><strong>Student ID</strong><p>#${student.id}</p></div>
+      `;
+      openPopup("viewStudentPopup");
+    }
+
+    function openEditStudent(id) {
+      const student = students.find((s) => s.id === id);
+      if (!student) return;
+
+      editingStudentId = id;
+      document.getElementById("editStudentName").value = student.name;
+      document.getElementById("editStudentEmail").value = student.email;
+      document.getElementById("editStudentPhone").value = student.phone;
+      document.getElementById("editStudentCountry").value = student.country;
+      document.getElementById("editStudentPlan").value = student.plan;
+      document.getElementById("editStudentPrice").value = student.price;
+      document.getElementById("editStudentStatus").value = student.status;
+
+      openPopup("editStudentPopup");
+    }
+
+    function deleteStudent(id) {
+      const index = students.findIndex((s) => s.id === id);
+      if (index !== -1) {
+        students.splice(index, 1);
+        refreshAll();
+      }
+    }
+
+    function deleteTeacher(id) {
+      const index = teachers.findIndex((t) => t.id === id);
+      if (index !== -1) {
+        teachers.splice(index, 1);
+        refreshAll();
+      }
+    }
+
+    document.getElementById("editStudentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const student = students.find((s) => s.id === editingStudentId);
+      if (!student) return;
+
+      student.name = document.getElementById("editStudentName").value.trim();
+      student.email = document.getElementById("editStudentEmail").value.trim();
+      student.phone = document.getElementById("editStudentPhone").value.trim();
+      student.country = document.getElementById("editStudentCountry").value.trim();
+      student.plan = document.getElementById("editStudentPlan").value;
+      student.price = document.getElementById("editStudentPrice").value.trim();
+      student.status = document.getElementById("editStudentStatus").value;
+
+      closePopup("editStudentPopup");
+      refreshAll();
+    });
+
+    document.getElementById("addStudentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const plan = document.getElementById("addStudentPlan").value;
+      let price = "40€ / trimestre";
+      if (plan === "Standard") price = "70€ / trimestre";
+      if (plan === "Premium") price = "100€ / trimestre";
+      if (plan === "VIP") price = "150€ / trimestre";
+
+      const newStudent = {
+        id: Date.now(),
+        name: document.getElementById("addStudentName").value.trim(),
+        email: document.getElementById("addStudentEmail").value.trim(),
+        phone: document.getElementById("addStudentPhone").value.trim(),
+        country: document.getElementById("addStudentCountry").value,
+        plan: plan,
+        price: price,
+        status: document.getElementById("addStudentStatus").value
+      };
+
+      students.push(newStudent);
+      this.reset();
+      closePopup("addStudentPopup");
+      refreshAll();
+    });
+
+    document.getElementById("addTeacherForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const newTeacher = {
+        id: Date.now(),
+        name: document.getElementById("addTeacherName").value.trim(),
+        speciality: document.getElementById("addTeacherSpeciality").value.trim(),
+        email: document.getElementById("addTeacherEmail").value.trim(),
+        phone: document.getElementById("addTeacherPhone").value.trim(),
+        country: document.getElementById("addTeacherCountry").value,
+        schedule: document.getElementById("addTeacherSchedule").value.trim(),
+        status: document.getElementById("addTeacherStatus").value
+      };
+
+      teachers.push(newTeacher);
+      this.reset();
+      closePopup("addTeacherPopup");
+      refreshAll();
+    });
+
+    function refreshAll() {
+      renderStudents();
+      renderTeachers();
+      renderRecentRegistrations();
+      renderTeacherOverview();
+      renderPlansOverview();
+      renderStats();
+    }
+
+    document.getElementById("openAddStudentBtn").addEventListener("click", () => {
+      openPopup("addStudentPopup");
+    });
+
+    document.getElementById("openAddTeacherBtn").addEventListener("click", () => {
+      openPopup("addTeacherPopup");
+    });
+
+    studentSearch.addEventListener("input", renderStudents);
+    planFilter.addEventListener("change", renderStudents);
+    statusFilter.addEventListener("change", renderStudents);
+
+    document.querySelectorAll(".menu a[data-section]").forEach((link) => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelectorAll(".menu a").forEach((a) => a.classList.remove("active"));
+        this.classList.add("active");
+        const targetId = this.getAttribute("data-section");
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    const reveals = document.querySelectorAll(".reveal");
+    function revealOnScroll() {
+      const windowHeight = window.innerHeight;
+      reveals.forEach((el) => {
+        const top = el.getBoundingClientRect().top;
+        if (top < windowHeight - 80) {
+          el.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+
+    refreshAll();
+  </script>
+
+</body>
+</html>
